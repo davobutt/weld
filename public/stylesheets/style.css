@@ -1,0 +1,12 @@
+body {
+  padding: 65px 40px 40px 40px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.pre-scrollable {
+	max-height: 200px;
+}

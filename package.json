@@ -1,0 +1,23 @@
+{
+  "name": "weld",
+  "version": "0.0.0",
+  "description": "Proxy Server",
+  "main": "app.js",
+  "dependencies": {
+    "colors": "~0.6.2",
+    "connect": "~2.12.0",
+    "express-validator": "~2.1.0",
+    "express": "~3.3.4",
+    "jade": "~1.1.5",
+    "promise": "~4.0.0",
+    "http-proxy": "~1.0.1",
+    "redis": "~0.10.0",
+    "moment": "~2.5.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "BSD-2-Clause"
+}

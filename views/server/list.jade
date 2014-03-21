@@ -1,0 +1,39 @@
+extends ../layout
+
+block content
+    script(src='http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore.js')
+    script(src='http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js')
+    script(src='/javascripts/servers.js')
+
+    script(type="text/template", id="list-template")
+      include server-template.html
+  
+    form(action='.',method='post')
+        table.table.table-hover.table-condensed
+            tr
+                td
+                td.form-group
+                        input.form-control(name='port', value=formValues.port)
+                        if errors && errors.port
+                            span= errors.port.msg
+                td.form-group
+                        input.form-control(name='name', value=formValues.name)
+                        if errors && errors.name
+                            span= errors.name.msg
+                td
+                    .input-group
+                        span.input-group-addon http://
+                        input.form-control(name='target', value=formValues.target)
+                        if errors && errors.target
+                            span= errors.target.msg
+                td
+                    button.btn.btn-default(type="submit") New
+
+            tr 
+                th Status
+                th Port
+                th Name
+                th Target
+                th Count
+
+            tbody#server-table

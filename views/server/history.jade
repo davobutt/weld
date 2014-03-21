@@ -1,0 +1,40 @@
+extends ../layout
+
+block content
+    script(src='http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore.js')
+    script(src='http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js')
+    script.
+        var status = '!{server.status}';
+        var count = '!{server.count()}';
+        var serverName = '!{server.name}';
+
+    script(src='/javascripts/server.js')
+
+    script(type="text/template", id="server-button-template")
+      include server-button-template.html
+
+    .container-fluid
+        .row.well
+            .col-lg-2= server.name
+            .col-lg-2
+                .label.label-default= server.port
+            .col-lg-4= server.target
+            .col-lg-1.col-lg-offset-3
+                #server-button.btn-group.btn-group-xs
+    
+    table.table.table-condensed
+        tr
+            th Time
+            th Status
+            th Url
+            th Response
+        each response in data
+            tr(class=response.status == '200' ? '' : response.status == 'LISTEN' ? 'success' : 'danger')
+                td= moment(response.timestamp).format('YYYY/MM/DD HH:mm:ss')
+                    br
+                    .small=moment(response.timestamp).fromNow()
+                td= response.status
+                td= response.url
+                td
+                    if response.jsonResponse
+                        pre.pre-scrollable!=JSON.stringify(response.jsonResponse, null, 4).replace(/\n/g, "<br />")

@@ -1,0 +1,28 @@
+<% var statusClass = status == 'Stopped' ? 'danger' : status == 'Listening' ? 'success' : 'default' %>
+
+
+	<td>
+		<div class="btn-group btn-group-xs">
+			<button class="btn btn-<%= statusClass %> dropdown-toggle" type="button", data-toggle="dropdown">
+				<%= status %>
+			<% if (status !== 'Archived') { %>
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu" role="menu">
+				<% if (status == 'Listening') { %>
+					<li class="action stop"><a>Stop</a></li>
+				<% } else if (status == 'Stopped') { %> 
+					<li class="action start"><a>Start</a></li>
+				<% } %>
+				<li class="action reset"><a>Reset</a></li>
+				<li class="divider"></li>
+				<li class="action remove"><a>Remove / Archive</a></li>
+			</ul>
+			<% } else { %></button><% } %>
+
+		</div>
+	</td>
+	<td><%= port %></td>
+	<td><a href="/server/<%= name %>"><%= name %></a></td>
+	<td><%= target %></td>
+	<td title="<%= errorCount %> Errors"><%= count %></td>

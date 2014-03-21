@@ -1,0 +1,8 @@
+extends layout
+
+block content
+  h1= title
+  ul.list-group
+    each val, key in config
+        li.list-group-item= key + " : " + val.target
+            span.badge= val.count
