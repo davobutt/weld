@@ -10,6 +10,6 @@ Weld is written in [node.js][node]
 
 ## Build Status
 
-[![Build Status](https://travis-ci.org/gubber/weld.svg?branch=master)](https://travis-ci.org/gubber/weld)
+[![Build Status](https://travis-ci.org/gubber/weld.svg?branch=master)](https://travis-ci.org/gubber/weld) [![Coverage Status](https://coveralls.io/repos/gubber/weld/badge.png)](https://coveralls.io/r/gubber/weld)
 
 ## Integration testing with weld
