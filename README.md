@@ -13,3 +13,32 @@ Weld is written in [node.js][node]
 [![Build Status](https://travis-ci.org/gubber/weld.svg?branch=master)](https://travis-ci.org/gubber/weld) [![Coverage Status](https://coveralls.io/repos/gubber/weld/badge.png)](https://coveralls.io/r/gubber/weld)
 
 ## Integration testing with weld
+
+### Install
+
+```
+git clone git@github.com:gubber/weld.git
+cd weld
+node app
+```
+
+From here on in everything can be done with the [API](#api), the admin interface, or client libraries
+
+### API
+
+#### Create a proxy server
+
+```
+POST weldserver.com:port/api/server/ServerName
+
+{
+	port: 49100,
+	target: 'http://targetserver.com:1234'
+}
+```
+
+#### Check status
+
+```
+GET weldserver.com:port/api/server/ServerName
+```
