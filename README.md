@@ -7,3 +7,5 @@ Weld has a RESTful api which can be used to programmatically set up, interogate 
 Weld is written in [node.js][node]
 
   [node]: https://github.com/joyent/node
+
+## Integration testing with weld
