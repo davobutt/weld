@@ -12,12 +12,21 @@
     "promise": "~4.0.0",
     "http-proxy": "~1.0.1",
     "redis": "~0.10.0",
-    "moment": "~2.5.1"
+    "moment": "~2.5.1",
+    "mocha": "~1.18.2",
+    "rewire": "~2.0.0",
+    "blanket": "~1.1.6"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "make test"
   },
   "author": "",
-  "license": "BSD-2-Clause"
+  "license": "BSD-2-Clause",
+  "config": {
+      "blanket": {
+        "pattern": "",
+        "data-cover-never" : ["test","node_modules"]
+      }
+    }
 }
