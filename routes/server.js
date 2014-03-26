@@ -1,6 +1,6 @@
 'use strict';
 
-var server = require('../servers/server');
+var server = require('../servers/serverManager');
 var util = require('util');
 
 exports.home = function(req, res) {

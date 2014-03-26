@@ -5,6 +5,11 @@ test:
 	--recursive --require blanket \
 	--reporter mocha-lcov-reporter | ./node_modules/coveralls/bin/coveralls.js \
 
+testlocal:
+	@NODE_ENV=test WELD_COVERAGE=1 ./node_modules/.bin/mocha \
+	--recursive \
+	--reporter $(REPORTER)
+
 test-w:
 	@NODE_ENV=test ./node_modules/.bin/mocha \
 	--reporter $(REPORTER) --recursive \

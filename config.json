@@ -1,0 +1,10 @@
+{
+	"weldPort" :3001,
+	"servers" : [
+		{ 
+			"port" : 49100,
+			"name" : "Ask",
+			"target" : "http://ask.globalmine.com"
+		}
+	]
+}

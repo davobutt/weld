@@ -1,28 +1,16 @@
 'use strict';
 
-require('colors');
-
 var http = require('http'),
     connect = require('connect'),
     httpProxy = require('http-proxy'),
     util = require('util'),
     db = require('./redisBacked'),
     moment = require('moment'),
+    ut = require('./utility'),
     Promise = require('promise');
 
-var servers = {};
-
-var archiveMarker = 1;
-
-var cacheEntry = function(status, url, jsonResponse) {
-    var data = {
-        timestamp : new Date().toJSON(),
-        status : status,
-        jsonResponse : jsonResponse,
-        url : url
-    };
-    return JSON.stringify(data);
-};
+var cacheEntry = ut.cacheEntry;
+var getArchiveMarker = ut.getArchiveMarker;
 
 var readAndCacheJson = function(server) {
 
@@ -164,44 +152,11 @@ Server.prototype.resetCounts = function() {
     this.pushToCache(cacheEntry('RESET'));
 };
 
-exports.list = function() {
-    return Object.keys(servers).map(function(key) {
-        return servers[key];
-    });
-};
-
-exports.get = function(serverId) {
-    return servers[serverId];
-};
-
-exports.add = function(port, name, target, callback) {
-    if(servers[name] === undefined) {
-        var server = new Server(port, name, target);
-        servers[name] = server;
-        callback();
-    } else {
-        callback('Name in use');
-    }
-
-};
-
-exports.remove = function(server, callback) {
-    if (server.status === 'Listening') {
-        server.stopListening().then(function() {
-            archiveServer(server, callback);
-        }, function() {
-            callback('error', server);
-        });
-    } else {
-        archiveServer(server, callback);
-    }
-
-};
-
-var archiveServer = function(server, callback) {
+Server.prototype.archiveServer = function(callback) {
+    var server = this;
     server.originalName = server.name;
 
-    server.name = server.name + '@' + archiveMarker++;
+    server.name = server.name + '@' + getArchiveMarker();
     server.token = server.name.replace(' ', '_');
     server.httpServer = undefined;
     server.status = 'Archived';
@@ -209,10 +164,5 @@ var archiveServer = function(server, callback) {
         server.pushToCache(cacheEntry('ARCHIVED'));
     });
 
-    servers[server.name] = server;
-    delete servers[server.originalName];
-    callback(null, server);
+    callback(server);
 };
-
-exports.archiveServer = archiveServer;
-
