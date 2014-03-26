@@ -84,6 +84,11 @@ Server.prototype.count = function() {
 
 Server.prototype.stopListening = function() {
     var server = this;
+    if (server.status === 'Stopped') {
+        return new Promise(function(resolve) {
+            resolve(server);
+        });
+    }
     var promise = new Promise(function (resolve, reject) {
         server.httpServer.once('close', function() {
             util.log(server.name + ' proxy server'.blue + ' stopped '.red.bold + 'on port '.blue + String(server.port).yellow);
@@ -116,6 +121,12 @@ Server.prototype.getResponses = function(callback) {
 
 Server.prototype.startListening = function() {
     var server = this;
+    if (server.status === 'Listening') {
+        return new Promise(function(resolve) {
+            resolve(server);
+        });
+    }
+    
     var promise = new Promise(function (resolve, reject) {
         server.httpServer.once('listening', function() {
             util.log(server.name + ' proxy server'.blue + ' started '.green.bold + 'on port '.blue + String(server.port).yellow + ' to '.blue + server.target.green.bold);

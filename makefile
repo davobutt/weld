@@ -7,7 +7,7 @@ test:
 
 testlocal:
 	@NODE_ENV=test WELD_COVERAGE=1 ./node_modules/.bin/mocha \
-	--recursive \
+	--recursive --require blanket \
 	--reporter $(REPORTER)
 
 test-w:

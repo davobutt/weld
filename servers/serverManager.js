@@ -28,25 +28,16 @@ exports.add = function(port, name, target, callback) {
 };
 
 exports.remove = function(server, callback) {
-    if (server.status === 'Listening') {
-        server.stopListening().then(function() {
-            exports.archiveServer(server, callback);
-        }, function() {
-            callback('error', server);
+    server.stopListening().then(function() {
+        server.archiveServer(function(server) {
+            servers[server.name] = server;
+            delete servers[server.originalName];
+            callback(null, server);
         });
-    } else {
-        exports.archiveServer(server, callback);
-    }
-
-};
-
-
-exports.archiveServer = function(server, callback) {
-    server.archiveServer(function(server) {
-        servers[server.name] = server;
-        delete servers[server.originalName];
-        callback(server);
+    }, function() {
+        callback('error', server);
     });
+
 };
 
 
