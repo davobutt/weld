@@ -1,10 +1,8 @@
 # Weld
 
-A proxy server service which can be used for integration testing.
+A proxy server service which can be used for integration testing written in [node.js][node]
 
-Weld has a RESTful api which can be used to programmatically set up, interogate and tear down proxy servers.
-
-Weld is written in [node.js][node]
+Weld has a RESTful api which can be used to programmatically set up, interogate and tear down proxy servers. It comes with a middleware layer which parses and stores JSON. By default this cache is in redis. Different middleware applications can be written and added in the conventional way using [connect](http://www.senchalabs.org/connect/). 
 
   [node]: https://github.com/joyent/node
 

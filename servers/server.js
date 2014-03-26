@@ -7,44 +7,13 @@ var http = require('http'),
     db = require('./redisBacked'),
     moment = require('moment'),
     ut = require('./utility'),
-    Promise = require('promise');
+    Promise = require('promise'),
+    readAndCacheJson = require('./cacheJson').readAndCacheJson;
 
 var cacheEntry = ut.cacheEntry;
 var getArchiveMarker = ut.getArchiveMarker;
 
-var readAndCacheJson = function(server) {
 
-    return function (req, res, next) {
-    var _write = res.write;
-    var _end = res.end;
-    var out = [];
-
-    delete req.headers['accept-encoding'];
-
-    res.end = function (data) {
-        var content = res.getHeader('Content-Type');
-        if( res.statusCode !== 200) {
-            server.errorCount++;
-            util.log(server.port + ' '+ server.name + ' received '.blue + String(res.statusCode).bold.red + ' ' + req.originalUrl.blue);
-            server.pushToCache(cacheEntry(res.statusCode, req.originalUrl));
-        }
-        if (out !== undefined && content && content.indexOf('/json') != -1) {
-            util.log(server.port + ' ' + server.name + ' response logged'.blue + ' type: '.green + util.inspect(res.getHeader('Content-Type')).yellow);
-            var dataAsJson = JSON.parse(out.join(''));
-            server.pushToCache(cacheEntry(res.statusCode, req.originalUrl, dataAsJson));
-            server.goodCount++;
-            server.lastMessageTimestamp = moment();
-        }
-      
-        _end.call(res,data);
-    };
-    res.write = function (data) {
-        out.push(data);
-        _write.call(res, data);
-    };
-    next();
-  };
-};
 
 var Server = function(port, name, target) {
     
@@ -59,11 +28,12 @@ var Server = function(port, name, target) {
         target: target
     });
 
-    var app = connect.createServer(
-        readAndCacheJson(this),
-        function (req, res) {
-            proxy.web(req, res);
-        });
+    var app = connect.createServer();
+    app.use(readAndCacheJson(this));
+    app.use(function(req, res) {
+        proxy.web(req, res);
+    });
+
 
     this.httpServer = http.createServer(app);
 
