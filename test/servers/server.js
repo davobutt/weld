@@ -73,14 +73,16 @@ describe('Server', function(){
     });
 
     describe('#resetCounts()', function(){
-        it('should reset the counters and push event to the log', function(){
+        it('should reset the counters and emit a reset event', function(done){
             var unit = new Server(1234, 'Test');
+            unit.on('reset', function() {
+                assert.equal(unit.goodCount, 0);
+                assert.equal(unit.errorCount, 0);
+                done();
+            });
             unit.goodCount = 123;
             unit.errorCount = 999;
             unit.resetCounts();
-            assert.equal(unit.goodCount, 0);
-            assert.equal(unit.errorCount, 0);
-            assert(pushToCacheCalled);
         });
     });
 
@@ -118,14 +120,12 @@ describe('Server', function(){
             });
         });
 
-        it('should log the ARCHIVE event to the newly renamed cache', function(done) {
+        it('should emit ARCHIVE event', function(done) {
             var unit = new Server('1234', 'Test', 'Target');
-            unit.archiveServer(function() {
-                assert.equal(pushToCacheCalled.key, originalBuildKey('Test@22'));
-                assert.equal(JSON.parse(pushToCacheCalled.entry).status, 'ARCHIVED');
+            unit.on('archived', function() {
                 done();
             });
-            
+            unit.archiveServer(function() {});
         });
     });
 

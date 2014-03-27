@@ -8,6 +8,7 @@ var http = require('http'),
     moment = require('moment'),
     ut = require('./utility'),
     Promise = require('promise'),
+    EventEmitter = require('events').EventEmitter,
     CacheJsonMiddleware = require('./cacheJson').CacheJsonMiddleware;
 
 var cacheEntry = ut.cacheEntry;
@@ -40,6 +41,8 @@ var Server = function(port, name, target) {
     this.status = 'Stopped';
     db.clearCache(db.buildKey(this.token));
 };
+
+util.inherits(Server, EventEmitter);
 
 exports.Server = Server;
 Server.exposedFields = ['status', 'port', 'id', 'name', 'count', 'target', 'errorCount', 'goodCount'];
@@ -130,7 +133,7 @@ Server.prototype.exposed = function() {
 Server.prototype.resetCounts = function() {
     this.goodCount = 0;
     this.errorCount = 0;
-    this.pushToCache(cacheEntry('RESET'));
+    this.emit('reset');
 };
 
 Server.prototype.archiveServer = function(callback) {
@@ -142,7 +145,8 @@ Server.prototype.archiveServer = function(callback) {
     server.httpServer = undefined;
     server.status = 'Archived';
     db.rename(db.buildKey(server.originalName), db.buildKey(server.token), function() {
-        server.pushToCache(cacheEntry('ARCHIVED'));
+        server.emit('archived');
+        //server.pushToCache(cacheEntry('ARCHIVED'));
     });
 
     callback(server);

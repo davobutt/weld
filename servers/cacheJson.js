@@ -3,9 +3,18 @@
 var cacheEntry = require('./utility').cacheEntry;
 var moment = require('moment');
 var util = require('util');
+var redisBackedCacheProvider = require('./redisBacked');
 
+var CacheJsonMiddleware = function(server, cacheProvider) {
+    
+    this.cacheProvider = cacheProvider || redisBackedCacheProvider;
+    this.server = server;
+    var self = this;
+    
+    server.on('reset', function() {
+        self.handleReset();
+    });
 
-var CacheJsonMiddleware = function(server) {
     this.handle = function (req, res, next) {
         var _write = res.write;
         var _end = res.end;
@@ -39,3 +48,9 @@ var CacheJsonMiddleware = function(server) {
 };
 
 exports.CacheJsonMiddleware = CacheJsonMiddleware;
+
+CacheJsonMiddleware.prototype.handleReset = function() {
+    var key = this.cacheProvider.buildKey(this.server.token);
+    var entry = cacheEntry('RESET');
+    this.cacheProvider.pushToCache(key, entry, function() {});
+};
