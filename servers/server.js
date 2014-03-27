@@ -8,7 +8,7 @@ var http = require('http'),
     moment = require('moment'),
     ut = require('./utility'),
     Promise = require('promise'),
-    readAndCacheJson = require('./cacheJson').readAndCacheJson;
+    CacheJsonMiddleware = require('./cacheJson').CacheJsonMiddleware;
 
 var cacheEntry = ut.cacheEntry;
 var getArchiveMarker = ut.getArchiveMarker;
@@ -29,7 +29,7 @@ var Server = function(port, name, target) {
     });
 
     var app = connect.createServer();
-    app.use(readAndCacheJson(this));
+    app.use(new CacheJsonMiddleware(this));
     app.use(function(req, res) {
         proxy.web(req, res);
     });
