@@ -4,6 +4,10 @@ A proxy server service which can be used for integration testing written in [nod
 
 Weld has a RESTful api which can be used to programmatically set up, interogate and tear down proxy servers. It comes with a middleware layer which parses and stores JSON. By default this cache is in redis. Different middleware applications can be written and added in the conventional way using [connect](http://www.senchalabs.org/connect/). 
 
+## Usage Example
+
+Imagine you have a series of microservices all communicating with each other using JSON. You can use weld in between all of these connections to test a variety of situations. For example you could write a test which ensures the appropriate failures when one of the systems is uncommunicative. You could also validate the JSON transferred between the systems. 
+
   [node]: https://github.com/joyent/node
 
 ## Build Status
