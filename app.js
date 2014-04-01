@@ -12,7 +12,8 @@ var express = require('express'),
     expressValidator = require('express-validator'),
     util = require('util'),
     moment = require('moment'),
-    config = require('./config.json');
+    config = require('./config.json'),
+    serverManager = require('./servers/serverManager');
 
 var app = express();
 
@@ -35,6 +36,13 @@ if ('development' == app.get('env')) {
     app.use(express.errorHandler());
 }
 
+if(config.servers && config.servers.length > 0) {
+	serverManager.addServers(config.servers, function(serversInError) {
+		serversInError.forEach(function(server) {
+			util.log('Couldn\'t configure ' + server.name.blue + ' ' + server.port + ' to ' + server.target);
+		});
+	});
+}
 
 app.get('/', server.home);
 app.get('/api/servers', server.listApi);
@@ -52,3 +60,4 @@ app.get('/server/:serverId', server.history);
 http.createServer(app).listen(app.get('port'), function(){
   util.log('WELD'.bold.yellow + ' admin server running on port '.yellow + String(app.get('port')).green);
 });
+

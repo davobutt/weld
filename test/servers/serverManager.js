@@ -79,6 +79,64 @@ describe('ServerManager', function() {
                 });
             });
         });
+
+        
+    });
+
+    describe('#addFromConfig()', function () {
+        it('should add the servers provided in config to the store', function(done) {
+            var config = {
+                servers: [{
+                    port: 9993,
+                    name: 'TestServer',
+                    target: 'http://www.sometest.com'
+                },{
+                    port:1234,
+                    name: 'TestServer2',
+                    target: 'http://localhost:90912'
+                }]
+            };
+
+            server.addServers(config.servers, function() {
+                var retreivedServer1 = server.get('TestServer');
+                assert.equal(retreivedServer1.name, 'TestServer');
+                assert.equal(retreivedServer1.port, 9993);
+                assert.equal(retreivedServer1.target, 'http://www.sometest.com');
+                
+                var retreivedServer2 = server.get('TestServer2');
+                assert.equal(retreivedServer2.name, 'TestServer2');
+                assert.equal(retreivedServer2.port, 1234);
+                assert.equal(retreivedServer2.target, 'http://localhost:90912');
+                done();
+            });
+            
+        });
+
+        it('should call back with the bad server if it is a duplicate', function(done) {
+            var config = {
+                servers: [{
+                    port: 9993,
+                    name: 'TestServer',
+                    target: 'http://www.sometest.com'
+                },{
+                    port: 1234,
+                    name: 'TestServer',
+                    target: 'http://localhost:90912'
+                }]
+            };
+
+            server.addServers(config.servers, function(serversInError) {
+                var retreivedServer1 = server.get('TestServer');
+                assert.equal(retreivedServer1.name, 'TestServer');
+                assert.equal(retreivedServer1.port, 9993);
+                assert.equal(retreivedServer1.target, 'http://www.sometest.com');
+                
+                assert.equal(serversInError[0].name, 'TestServer');
+                assert.equal(serversInError[0].port, 1234);
+                assert.equal(serversInError[0].target, 'http://localhost:90912');
+                done();
+            });
+        });
     });
 
 });

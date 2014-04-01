@@ -27,6 +27,18 @@ exports.add = function(port, name, target, callback) {
 
 };
 
+exports.addServers = function(servers, callback) {
+    var errors = [];
+    servers.forEach(function(server) {
+        exports.add(server.port, server.name, server.target, function(error){
+            if (error !== undefined) {
+                errors.push(server);
+            }
+        });
+    });
+    callback(errors);
+};
+
 exports.remove = function(server, callback) {
     server.stopListening().then(function() {
         server.archiveServer(function(server) {
