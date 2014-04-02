@@ -5,7 +5,18 @@ var assert = require('assert');
 var redisBackedCacheProvider = require('../../servers/redisBacked');
 var CacheJsonMiddleware = require('../../servers/cacheJson').CacheJsonMiddleware;
 var EventEmitter = require('events').EventEmitter;
+
 var pushCalled = false;
+var writeCalled = false;
+var endCalled = false;
+var pushToCacheCalled = false;
+
+var mockServer = new EventEmitter();
+mockServer.token = 'TestServer';
+mockServer.pushToCache = function(cacheEntry) {
+    pushToCacheCalled = cacheEntry;
+};
+
 var mockCacheProvider = {
     pushToCache : function(key, entry, callback) {
         pushCalled = {key: key, entry:entry};
@@ -16,10 +27,27 @@ var mockCacheProvider = {
     }
 };
 
+var mockResponse = {
+    write: function() {
+        writeCalled = true;
+    },
+    end: function() {
+        endCalled = true;
+    },
+    getHeader: function() {
+        return '';
+    }
+};
+var mockRequest = {
+    headers: []
+};
 
 describe('CacheJsonMiddleware', function() {
     beforeEach(function() {
         pushCalled = false;
+        writeCalled = false;
+        endCalled = false;
+        pushToCacheCalled = false;
     });
 
     describe('#CacheJsonMiddleware()', function() {
@@ -55,5 +83,31 @@ describe('CacheJsonMiddleware', function() {
             assert.equal(pushCalled.key, mockCacheProvider.buildKey('TestServer'));
             assert.equal(JSON.parse(pushCalled.entry).status, 'RESET');
         });
+    });
+
+    describe('#handle()', function(){
+        it('should call next() so other middleware will work properly', function(done){
+            var unit = new CacheJsonMiddleware(mockServer, mockCacheProvider);
+            unit.handle(mockRequest, mockResponse, function(){
+                done();
+            });
+        });
+
+        it('should call the original write after collecting the data', function(){
+            var unit = new CacheJsonMiddleware(mockServer, mockCacheProvider);
+            unit.handle(mockRequest, mockResponse, function(){});
+            mockResponse.write('SOME DATA');
+            assert.equal(writeCalled, true);
+
+        });
+
+        it('should call the original end after data has ended', function(){
+            var unit = new CacheJsonMiddleware(mockServer, mockCacheProvider);
+            unit.handle(mockRequest, mockResponse, function(){});
+            mockResponse.end('SOME DATA');
+            assert.equal(endCalled, true);
+
+        });
+
     });
 });

@@ -26,11 +26,11 @@ var CacheJsonMiddleware = function(server, cacheProvider) {
             var content = res.getHeader('Content-Type');
             if( res.statusCode !== 200) {
                 server.errorCount++;
-                util.log(server.port + ' '+ server.name + ' received '.blue + String(res.statusCode).bold.red + ' ' + req.originalUrl.blue);
+                //util.log(server.port + ' '+ server.name + ' received '.blue + String(res.statusCode).bold.red + ' ' + req.originalUrl.blue);
                 server.pushToCache(cacheEntry(res.statusCode, req.originalUrl));
             }
             if (out !== undefined && content && content.indexOf('/json') != -1) {
-                util.log(server.port + ' ' + server.name + ' response logged'.blue + ' type: '.green + util.inspect(res.getHeader('Content-Type')).yellow);
+                //util.log(server.port + ' ' + server.name + ' response logged'.blue + ' type: '.green + util.inspect(res.getHeader('Content-Type')).yellow);
                 var dataAsJson = JSON.parse(out.join(''));
                 server.pushToCache(cacheEntry(res.statusCode, req.originalUrl, dataAsJson));
                 server.goodCount++;
