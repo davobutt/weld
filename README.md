@@ -12,7 +12,7 @@ Imagine you have a series of microservices all communicating with each other usi
 
 ## Build Status
 
-[![Build Status](https://travis-ci.org/gubber/weld.svg?branch=master)](https://travis-ci.org/gubber/weld) [![Coverage Status](https://coveralls.io/repos/gubber/weld/badge.png)](https://coveralls.io/r/gubber/weld)
+[![Build Status](https://travis-ci.org/gubber/weld.svg?branch=master)](https://travis-ci.org/gubber/weld) [![Coverage Status](https://coveralls.io/repos/gubber/weld/badge.png)](https://coveralls.io/r/gubber/weld) [![Code Climate](https://codeclimate.com/github/gubber/weld.png)](https://codeclimate.com/github/gubber/weld)
 
 ## Integration testing with weld
 
