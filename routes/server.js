@@ -18,9 +18,9 @@ exports.listApi = function(req, res) {
 };
 
 exports.create = function(req, res) {
-    var port = req.param('port');
-    var name = req.param('name');
-    var target = req.param('target');
+    var port = req.body.port;
+    var name = req.body.name;
+    var target = req.body.target;
 
     req.checkBody('port', 'Invalid port').notEmpty().isInt();
     req.checkBody('name', 'No Name').notEmpty();

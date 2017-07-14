@@ -14,8 +14,6 @@ var http = require('http'),
 var cacheEntry = ut.cacheEntry;
 var getArchiveMarker = ut.getArchiveMarker;
 
-
-
 var Server = function(port, name, target) {
     
     this.port = port;
@@ -29,7 +27,7 @@ var Server = function(port, name, target) {
         target: target
     });
 
-    var app = connect.createServer();
+    var app = connect();
     app.use(new CacheJsonMiddleware(this));
     app.use(function(req, res) {
         proxy.web(req, res);

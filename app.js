@@ -10,9 +10,13 @@ var express = require('express'),
     http = require('http'),
     path = require('path'),
     expressValidator = require('express-validator'),
+    bodyParser = require('body-parser'),
+    methodOverride = require('method-override'),
     util = require('util'),
     moment = require('moment'),
     config = require('./config.json'),
+    serveStatic = require('serve-static'),
+    errorHandler = require('errorhandler'),
     serverManager = require('./servers/serverManager');
 
 var app = express();
@@ -20,20 +24,19 @@ var app = express();
 // all environments
 app.set('port', config.weldPort || 3000);
 app.set('views', __dirname + '/views');
-app.set('view engine', 'jade');
-app.use(express.favicon());
-//app.use(express.logger('dev'));
-app.use(express.bodyParser());
+app.set('view engine', 'pug');
+//app.usnpme(express.logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
-app.use(express.methodOverride());
-app.use(app.router);
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(methodOverride());
+app.use(serveStatic(path.join(__dirname, 'public')));
 
 app.locals.moment = moment;
 
 // development only
 if ('development' == app.get('env')) {
-    app.use(express.errorHandler());
+    app.use(errorHandler());
 }
 
 if(config.servers && config.servers.length > 0) {
